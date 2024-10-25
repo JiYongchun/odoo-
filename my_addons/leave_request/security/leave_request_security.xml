@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="leave_request.model_category" model="ir.module.category">
+            <field name="name">请假管理</field>
+            <field name="description">请假管理</field>
+        </record>
+
+<!--        表级别请假申请权限  增、改、查-->
+        <record id="leave_request.group_base" model="res.groups">
+            <field name="category_id" ref="leave_request.model_category"/>
+            <field name="name">请假申请权限</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="comment">建/查自己的请假记录，查看审批意见</field>
+        </record>
+
+<!--        表级别请假审批权限  增删改查-->
+        <record id="leave_request.group_manager" model="res.groups">
+            <field name="category_id" ref="leave_request.model_category"/>
+            <field name="name">请假审批权限</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="comment">查看全部请假记录，写入及修改审批意见</field>
+        </record>
+
+    </data>
+
+    <data>
+        <record id="leave_request.group_base_rule" model="ir.rule">
+            <field name="name">请假申请权限</field>
+            <field name="model_id" ref="model_leave_request"/>
+            <field name="domain_force">[ ('name', '=', user.name)]</field>
+            <field name="groups" eval="[(4, ref('leave_request.group_base'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+    </data>
+
+    <data>
+        <record id="leave_request.group_manager_rule" model="ir.rule">
+            <field name="name">请假审批权限</field>
+            <field name="model_id" ref="model_leave_request"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('leave_request.group_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+    </data>
+
+</odoo>
